@@ -113,12 +113,12 @@ const ContactForm = () => {
                 <div className="row">
                     <div className="column">
                         <label htmlFor="email" className="form-label">Email:</label>
-                        <input type="text" autocomplete="off" id="email" name="email" value={formData.email} className="form-input" onChange={handleChange}/>
+                        <input type="text" autoComplete="off" id="email" name="email" value={formData.email} className="form-input" onChange={handleChange}/>
                         {errors.email && <p className='error-message'>{errors.email}</p>}
                     </div>
                     <div className="column columnright">
                         <label htmlFor="phone" className="form-label">Phone:</label>
-                        <input type="text" autocomplete="off" id="phone" name="phone" value={formData.phone} className="form-input" onChange={handleChange}/>
+                        <input type="text" autoComplete="off" id="phone" name="phone" value={formData.phone} className="form-input" onChange={handleChange}/>
                         {errors.phone && <p className='error-message'>{errors.phone}</p>}
                     </div>
                 </div>

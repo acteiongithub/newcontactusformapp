@@ -2,31 +2,13 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const AWS = require('aws-sdk');
-const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const port = 5000;
+const port = 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'build')));
-
-// Handle React routing, return all requests to React app
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-// AWS SES Configuration
-AWS.config.update({
-    region: process.env.AWS_REGION,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-});
-
-const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -78,30 +60,6 @@ db.connect(err => {
     });
 });
 
-// Function to send emails using AWS SES
-const sendEmail = (to, subject, body) => {
-    const params = {
-        Source: process.env.SES_SOURCE_EMAIL, // Verified source email
-        Destination: {
-            ToAddresses: [to]
-        },
-        Message: {
-            Subject: {
-                Data: subject,
-                Charset: 'UTF-8'
-            },
-            Body: {
-                Html: {
-                    Data: body,
-                    Charset: 'UTF-8'
-                }
-            }
-        }
-    };
-
-    return ses.sendEmail(params).promise();
-};
-
 // Route to handle form submission
 app.post('/api/postcontacts', async (req, res) => {
     const { firstname, lastname, email, phone, message } = req.body;
@@ -121,28 +79,7 @@ app.post('/api/postcontacts', async (req, res) => {
             res.status(500).send('Error saving data');
             return;
         }
-
-        // Sending emails using AWS SES
-        try {
-            // Admin notification email
-            await sendEmail(
-                process.env.ADMIN_EMAIL, 
-                'New Contact Form Submission', 
-                '<p>A new contact form has been submitted by ${firstname} ${lastname}.</p><p>Email: ${email}</p><p>Phone: ${phone}</p><p>Message: ${message}</p>'
-            );
-
-            // Acknowledgment email to the user
-            await sendEmail(
-                email,
-                'Thank you for contacting us',
-                '<p>Dear ${firstname},</p><p>Thank you for reaching out to us. We have received your message and will get back to you soon.</p><p>Best regards,<br>Your Company</p>'
-            );
-
-            res.send('Contact saved successfully.');
-        } catch (emailErr) {
-            console.error('Error sending emails:', emailErr);
-            res.status(500).send('Error saving data and sending emails');
-        }
+        res.send('Contact saved successfully.');
     });
 });
 
