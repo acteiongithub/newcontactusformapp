@@ -62,7 +62,7 @@ const ContactForm = () => {
         e.preventDefault();
         if (validate()) {
             try {
-                const res = await axios.post('http://localhost:5000/api/contacts', formData);
+                const res = await axios.post('/api/postcontacts', formData);
                 alert(res.data);
                 setFormData({
                     firstname: '',
@@ -113,12 +113,12 @@ const ContactForm = () => {
                 <div className="row">
                     <div className="column">
                         <label htmlFor="email" className="form-label">Email:</label>
-                        <input type="text" id="email" name="email" value={formData.email} className="form-input" onChange={handleChange}/>
+                        <input type="text" autocomplete="off" id="email" name="email" value={formData.email} className="form-input" onChange={handleChange}/>
                         {errors.email && <p className='error-message'>{errors.email}</p>}
                     </div>
                     <div className="column columnright">
                         <label htmlFor="phone" className="form-label">Phone:</label>
-                        <input type="text" id="phone" name="phone" value={formData.phone} className="form-input" onChange={handleChange}/>
+                        <input type="text" autocomplete="off" id="phone" name="phone" value={formData.phone} className="form-input" onChange={handleChange}/>
                         {errors.phone && <p className='error-message'>{errors.phone}</p>}
                     </div>
                 </div>

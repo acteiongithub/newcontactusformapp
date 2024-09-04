@@ -6,7 +6,8 @@ const App = () => {
     const [formSubmitted, setFormSubmitted] = useState(false);
 
     const handleFormSubmit = () => {
-        setFormSubmitted(true);
+        // Toggle formSubmitted to refresh ContactList data
+        setFormSubmitted(prevState => !prevState);
     };
 
     return (

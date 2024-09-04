@@ -7,7 +7,7 @@ const ContactList = ({ formSubmitted }) => {
     useEffect(() => {
         const fetchContacts = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/contacts');
+                const res = await axios.get('/api/getcontacts');
                 setContacts(res.data);
             } catch (err) {
                 console.error(err);
@@ -15,6 +15,7 @@ const ContactList = ({ formSubmitted }) => {
         };
         fetchContacts();
     }, [formSubmitted]); // Add formSubmitted to the dependency array
+    
 
     return (
         <div>
@@ -28,22 +29,20 @@ const ContactList = ({ formSubmitted }) => {
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Message</th>
-                        {/* Add other table headers as needed */}
                     </tr>
                 </thead>
                 <tbody>
-                    {contacts.map(item => (
-                        <tr key={item.customerid}>
-                            <td>{item.customerid}</td>
-                            <td>{item.firstname}</td>
-                            <td>{item.lastname}</td>
-                            <td>{item.email}</td>
-                            <td>{item.phone}</td>
-                            <td>{item.message}</td>
-                            {/* Render other table data as needed */}
-                        </tr>
-                    ))}
-                </tbody>
+                {Array.isArray(contacts) && contacts.map(item => (
+                    <tr key={item.customerid}>
+                        <td>{item.customerid}</td>
+                        <td>{item.firstname}</td>
+                        <td>{item.lastname}</td>
+                        <td>{item.email}</td>
+                        <td>{item.phone}</td>
+                        <td>{item.message}</td>
+                    </tr>
+                ))}
+            </tbody>
             </table>
         </div>
     );
